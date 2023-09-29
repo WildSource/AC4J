@@ -9,19 +9,22 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 import com.github.wildsource.Clicker;
+import com.github.wildsource.gui.panels.OptionsPanel;
 
 import net.miginfocom.swing.MigLayout;
 
 public class Window {
-	private JFrame frame;
 	private static JLabel log;
+
+	private JFrame frame;
+	private OptionsPanel optionsPanel;
 	private Clicker clicker;
-	private JTextField millis;
 
 	public Window() {
+		log = new JLabel();
+		clicker = new Clicker(log);
 		frameSetup();
 		welcomeTxt();
 		optionsUI();
@@ -32,13 +35,11 @@ public class Window {
 
 	private void frameSetup() {
 		frame = new JFrame();
-		log = new JLabel();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(640, 480);
 		frame.setLocationRelativeTo(null);
 		frame.setLayout(new MigLayout());
 		frame.setTitle("AC4J");
-		clicker = new Clicker(log);
 	}
 
 	private void welcomeTxt() {
@@ -46,13 +47,15 @@ public class Window {
 	}
 
 	private void optionsUI() {
-		frame.add(new JLabel("1 click per "), "split 3");
-
-		millis = new JTextField("5000");
-		frame.add(millis);
-
-		JLabel timeUnit = new JLabel(" milliseconds");
-		frame.add(timeUnit, "wrap");
+		/*
+		 * frame.add(new JLabel("1 click per "), "split 3");
+		 * 
+		 * millis = new JTextField("5000"); frame.add(millis);
+		 * 
+		 * JLabel timeUnit = new JLabel(" milliseconds"); frame.add(timeUnit, "wrap");
+		 */
+		this.optionsPanel = new OptionsPanel();
+		frame.add(optionsPanel.getPanel(), "wrap");
 	}
 
 	private void actionUI() {
@@ -82,7 +85,8 @@ public class Window {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!clicker.isRunning()) {
-					Long delay = Long.parseLong(millis.getText());
+					Long delay = Long.parseLong(optionsPanel.getTimeUniTJTextField()
+															.getText());
 					clicker.click(delay);
 				} else {
 					log.setText("Clicker is already clicking");
